@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Dalian transport publish system</title>
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css"><!--datetimepicker时间选择器-->
+    <link rel="stylesheet" href="css/main.css">
+    <script src="//cdn.bootcss.com/angular.js/1.6.2/angular.min.js"></script>
+    <script>
+        function isArray(o){
+            return Object.prototype.toString.call(o)=='[object Array]';
+        }
+
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope) {
+            var model = {{model|safe}};
+            if(!isArray(model)){
+                //不是数组
+                $scope.hint = "内部错误";
+                return;
+            }
+            if(model.length === 0){
+                $scope.hint = "无";
+                return;
+            }
+            function processModel(data) {
+                switch(data['state']){
+                    case -2:data['state'] = "发单者已取消";break;
+                    case -1:data['state'] = "已超时";break;
+                    case 1:data['state'] = "待接单";break;
+                    case 2:data['state'] = "已接单";break;
+                    case 3:data['state'] = "已完成";break;
+                }
+                var start_time = new Date();
+                start_time.setTime(data['start_time'] * 1000);
+                data['start_time'] = start_time.getHours() + ":" + (start_time.getMinutes()<10?("0"+start_time.getMinutes()):start_time.getMinutes());
+
+                var end_time = new Date();
+                end_time.setTime(data['end_time'] * 1000);
+                data['end_time'] = end_time.getHours() + ":" + (end_time.getMinutes()<10?("0"+end_time.getMinutes()):end_time.getMinutes());
+
+                return data;
+            }
+            var view = [];
+            while(model.length > 3){
+                var row = [];
+                row.push(processModel(model.pop()));
+                row.push(processModel(model.pop()));
+                row.push(processModel(model.pop()));
+                view.push(row);
+            }
+            var row = [];
+            while(model.length > 0){
+                row.push(processModel(model.pop()));
+            }
+            view.push(row);
+            $scope.view = view;
+        });
+    </script>
+</head>
+<body>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-negative-button" type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+                <button id="modal-positive-button" type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="" class="navbar-brand">车联网</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#my-nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div id="my-nav-collapse" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="/logout" class="logout">退出登录</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <h3 style="margin: 0 auto;text-align: center">欢迎,{{phone}}</h3>
+    <h4 style="margin: 20px auto 0 auto;text-align: center">进行中的订单</h4>
+    <div ng-app="myApp" ng-controller="myCtrl" ng-cloak><!--ng-cloak-->
+        {% raw %}
+        <h5 style="margin: 10px auto 0 auto;text-align: center">{{hint}}</h5>
+        <div class="row" data-ng-repeat="row in view">
+            <div class="col-md-4" data-ng-repeat="col in row">
+                <div class='cardview'>
+                    <h1>{{col.start_time}} -> {{col.end_time}}</h1>
+                    <!--<span class='close'></span>-->
+                    <div class='slider-container'>
+                        <div class='slider-turn'>
+                            <p>{{col.start_address}}</p>
+                            <p style="font-weight: 700">至</p>
+                            <p>{{col.end_address}}</p>
+                            <p>{{col.description}}</p>
+                        </div>
+                    </div>
+                    <div class='bottom'>
+                        <div class='step'>
+                            <span></span>
+                            <p>{{col.state}}</p>
+                            <!--<ul>-->
+                            <!--<li data-num='1'></li>-->
+                            <!--<li data-num='2'></li>-->
+                            <!--<li data-num='3'></li>-->
+                            <!--<li data-num='4'></li>-->
+                            <!--<li data-num='5'></li>-->
+                            <!--</ul>-->
+                        </div>
+                        <button class='btn cardview-btn'>取消订单</button>
+                        <div id="order_id_val" style="display: none">{{col.order_id}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endraw %}
+    </div>
+
+
+    <form action="launch" onsubmit="return false;" class="form-launch" method="post">
+        <h4 style="margin: 20px auto;text-align: center">新订单</h4>
+        <div class="tip"></div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="出发地" name="start_address" autofocus/>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="目的地" name="end_address"/>
+        </div>
+
+        <div class="form-group">
+            <div class='input-group date' id='datetimepicker-from'>
+                <input type='text' class="form-control" placeholder="订单时间" name="start_time" readonly/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class='input-group date' id='datetimepicker-to'>
+                <input type='text' class="form-control" placeholder="自动失效时间" name="end_time" readonly/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="备注" name="description"/>
+        </div>
+
+        <input type="submit" class="btn btn-primary btn-block button-launch" value="发布"/>
+    </form>
+
+</div>
+
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap-validator/0.5.3/js/language/zh_CN.min.js"></script>
+<script src="js/moment-with-locales.js"></script><!--datetimepicker时间选择器-->
+<script src="js/bootstrap-datetimepicker.min.js"></script><!--datetimepicker时间选择器-->
+<script src="js/main.js"></script>
+
+</body>
+</html>

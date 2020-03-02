@@ -1,0 +1,156 @@
+@charset "UTF-8";.panel-footer.navbar-fixed-bottom {
+    text-align: center
+}
+
+.navbar {
+    border-radius: 0
+}
+
+.navbar-collapse.collapse {
+    float: left
+}
+
+@media all and (min-width: 768px) {
+    .navbar-collapse.collapse {
+        float:right
+    }
+}
+
+
+.form-launch {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.cardview {
+    margin: 24px 0;
+    padding-bottom: 54px;
+    width: 100%;
+    height: auto;
+    background-color: #F3F3F3;
+    border-radius: 6px;
+    box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.4);
+    position: relative;
+}
+
+.cardview * {
+    outline: none;
+    /*text-overflow: ellipsis;*/
+    /*white-space: nowrap;*/
+}
+
+.cardview h1 {
+    font-size: 25px;
+    font-weight: 100;
+    color: #2C2C2C;
+    margin: 20px 25px;
+}
+.cardview a {
+    text-decoration: none;
+    color: #3476CA;
+}
+.cardview a:hover {
+    color: #6CB5F3;
+}
+
+.cardview:before {
+    content: '';
+    /*position: absolute;*/
+    left: -14px;
+    top: 28px;
+    border-style: solid;
+    border-width: 10px 14px 10px 0;
+    border-color: rgba(0, 0, 0, 0) #f3f3f3 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+}
+.cardview p {
+    /*overflow: hidden;*/
+    width: 100%;
+    font-size: 16px;
+    /*color: #a8aab2;*/
+    color: #000;
+    font-weight: 400;
+    line-height: 28px;
+    /*float: left;*/
+    margin: 0;
+}
+.cardview .bottom {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    width: 100%;
+    bottom: 0;
+    position: absolute;
+}
+.cardview .bottom .step {
+    flex: 3;
+    -webkit-flex: 3;
+    -ms-flex: 3;
+    width: 100%;
+    height: 54px;
+    background-color: #373942;
+    border-bottom-left-radius: 6px;
+    display: flex;
+}
+.cardview .bottom .step span {
+    flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    line-height: 54px;
+    color: #fff;
+    margin-left: 25px;
+    font-size: 18px;
+}
+
+.cardview .bottom .step p {
+    line-height: 54px;
+    color: #fff;
+    margin-left: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.cardview .btn {
+    flex: 1;
+    background-color: #6cb5f3;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+    color: #fff;
+    font-weight: bold;
+    border-bottom-right-radius: 6px;
+    cursor: pointer;
+    transition: all .3s;
+    outline: none;
+}
+
+.cardview .btn:hover {
+    background-color: #6BA5D6;
+    transition: all .3s;
+}
+.cardview .btn:active {
+    background-color: #5F8AAF;
+}
+.cardview .slider-container {
+    margin: 0 25px;
+    /*overflow: hidden;*/
+}
+.cardview .slider-turn {
+}
+
+.button-launch{
+    margin-bottom: 20px;
+}
+
+/*时间选择器对勾偏移*/
+div.date + i.glyphicon{
+    margin-right: 35px;
+}
+
+.modal-footer button{
+    /*display: inline;*/
+    /*width: 50%;*/
+    /*margin: auto;*/
+}
