@@ -1,5 +1,5 @@
 # Dalian-Taxi
-## Dalian taxi Android app(ride service hailing) similar to Uber
+## Dalian taxi Android app(ride service hailing) similar to Uber 
 
 ### Publish taxi hailing order:
 
